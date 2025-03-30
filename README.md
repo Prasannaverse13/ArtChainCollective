@@ -186,11 +186,3 @@ For reviewers who wish to test the platform without setting up wallets:
 3. **Mainnet Deployment**: Production deployment on Stellar mainnet
 4. **Mobile Applications**: Native mobile apps for iOS and Android
 5. **Community Governance**: DAO-based decision making for platform evolution
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Contact
-
-For questions or support, please contact the team at team@artchain.example.com
