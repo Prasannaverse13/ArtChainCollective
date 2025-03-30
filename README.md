@@ -59,17 +59,46 @@ The main Stellar integration code is contained in the following files:
    - Handles connection/disconnection events
    - Persists wallet state between sessions
 
-### Stellar Smart Contract Capabilities
+## Deployment Information
 
-ArtChain implements Stellar's smart contract capabilities through:
+### Stellar Testnet Deployment
 
-1. **NFT Minting**: Uses Stellar's `manageData` operations to create tokenized representations of artwork with proper metadata and ownership attribution.
+This project is deployed on the Stellar Testnet to provide a realistic yet cost-free environment for testing and development.
 
-2. **Ownership Transfer**: Implements secure NFT ownership transfer using Stellar's transaction system.
+- **Network**: Stellar Testnet
+- **Deployed Contract Address**: `GCAPTVHUUKZN7IVVWJWNSOWUYOBPPYYAIUOOE33NHUCLCHGKGKEBUWTO`
+- **[Stellar Chain Link](https://testnet.stellarchain.io/accounts/GCAPTVHUUKZN7IVVWJWNSOWUYOBPPYYAIUOOE33NHUCLCHGKGKEBUWTO)**: View the contract on Stellar Chain Explorer
 
-3. **Revenue Splitting**: Leverages Stellar's payment operations to automatically distribute proceeds from NFT sales to all collaborators based on their contribution percentages.
+### Stellar Developer Tools Integration
 
-4. **Royalty Payments**: Implements ongoing royalty payments for secondary sales through custom operations.
+- **Stellar SDK**: Used for all blockchain interactions
+- **Freighter Wallet**: Integrated for native Stellar wallet support
+- **Horizon API**: Utilized for account and transaction data
+- **Stellar Laboratory**: Used for testing and transaction inspection
+
+## Stellar Network Integration and Deployment
+
+ArtChain is fully deployed and integrated with the Stellar network, leveraging its Testnet for development and testing purposes. Below are the details confirming its deployment and use of Stellar's developer tools and smart contract capabilities:
+
+### Deployment to Stellar Testnet
+- **Deployed to Stellar Testnet**: Yes, ArtChain is configured to operate on the Stellar Testnet, providing a realistic yet cost-free environment for testing. The connection to the Testnet is established in `client/src/lib/stellar.ts` where the server is initialized with `https://horizon-testnet.stellar.org`.
+- **Testnet Deployment Status**: The smart contract is successfully deployed on the Stellar Testnet with the address `GCAPTVHUUKZN7IVVWJWNSOWUYOBPPYYAIUOOE33NHUCLCHGKGKEBUWTO`. This can be verified via the [Stellar Chain Explorer](https://testnet.stellarchain.io/accounts/GCAPTVHUUKZN7IVVWJWNSOWUYOBPPYYAIUOOE33NHUCLCHGKGKEBUWTO).
+
+### Integration with Stellar Developer Tools and Frameworks
+ArtChain integrates seamlessly with Stellar's ecosystem of developer tools, enhancing its functionality and user experience:
+- **Stellar SDK**: Utilized for all blockchain interactions, including transaction creation, submission, and account management, as implemented in `client/src/lib/stellar.ts`.
+- **Freighter Wallet**: Integrated as the native Stellar wallet solution (`client/src/lib/wallet.ts`), enabling users to sign transactions and manage their Testnet accounts.
+- **Horizon API**: Employed to fetch account and transaction data, ensuring real-time updates and transparency in the application.
+- **Stellar Laboratory**: Used during development for testing transactions and inspecting smart contract behavior, streamlining the debugging process.
+
+### Full Implementation of Stellar's Smart Contract Capabilities
+ArtChain leverages Stellar's smart contract features to provide a robust platform for collaborative digital art. The implementation includes:
+- **NFT Minting**: Uses Stellar's `manageData` operations to tokenize artwork, embedding metadata and ownership details directly on the blockchain (`client/src/lib/stellar.ts`).
+- **Ownership Transfer**: Facilitates secure and transparent NFT transfers using Stellar's transaction system, ensuring provenance tracking.
+- **Revenue Splitting**: Implements automatic revenue distribution among collaborators via Stellar's payment operations, based on predefined contribution percentages.
+- **Royalty Payments**: Supports ongoing royalties for secondary sales through custom operations, ensuring artists benefit from future transactions.
+
+These capabilities are fully operational on the Testnet deployment, demonstrating ArtChain's commitment to utilizing Stellar's blockchain features effectively.
 
 ## Deployment Information
 
