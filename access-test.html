@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ArtChain Server Test</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      line-height: 1.6;
+    }
+    .result {
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 4px;
+    }
+    .success {
+      background-color: #d4edda;
+      border: 1px solid #c3e6cb;
+      color: #155724;
+    }
+    .error {
+      background-color: #f8d7da;
+      border: 1px solid #f5c6cb;
+      color: #721c24;
+    }
+    button {
+      padding: 8px 16px;
+      background: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      margin-right: 10px;
+      margin-bottom: 10px;
+    }
+    button:hover {
+      background: #0069d9;
+    }
+    pre {
+      background: #f8f9fa;
+      padding: 10px;
+      border-radius: 4px;
+      overflow-x: auto;
+    }
+  </style>
+</head>
+<body>
+  <h1>ArtChain Server Test</h1>
+  
+  <div>
+    <button id="testHealth">Test Health Endpoint</button>
+    <button id="testApi">Test API Endpoint</button>
+    <button id="testWs">Test WebSocket</button>
+  </div>
+  
+  <div id="results"></div>
+  
+  <script>
+    const resultsContainer = document.getElementById('results');
+    
+    function addResult(message, isSuccess) {
+      const resultDiv = document.createElement('div');
+      resultDiv.className = `result ${isSuccess ? 'success' : 'error'}`;
+      resultDiv.textContent = message;
+      resultsContainer.prepend(resultDiv);
+    }
+    
+    function addJsonResult(title, data, isSuccess) {
+      const resultDiv = document.createElement('div');
+      resultDiv.className = `result ${isSuccess ? 'success' : 'error'}`;
+      
+      const titleEl = document.createElement('h3');
+      titleEl.textContent = title;
+      resultDiv.appendChild(titleEl);
+      
+      const pre = document.createElement('pre');
+      pre.textContent = JSON.stringify(data, null, 2);
+      resultDiv.appendChild(pre);
+      
+      resultsContainer.prepend(resultDiv);
+    }
+    
+    // Test Health Endpoint
+    document.getElementById('testHealth').addEventListener('click', async () => {
+      try {
+        const response = await fetch('/health');
+        const data = await response.json();
+        
+        addJsonResult(
+          `Health Check: ${response.ok ? 'SUCCESS' : 'FAILED'} (${response.status})`, 
+          data, 
+          response.ok
+        );
+      } catch (error) {
+        addResult(`Health Check Failed: ${error.message}`, false);
+      }
+    });
+    
+    // Test API Endpoint
+    document.getElementById('testApi').addEventListener('click', async () => {
+      try {
+        const response = await fetch('/api/artworks');
+        const data = await response.json();
+        
+        addJsonResult(
+          `API Test: ${response.ok ? 'SUCCESS' : 'FAILED'} (${response.status})`, 
+          data, 
+          response.ok
+        );
+      } catch (error) {
+        addResult(`API Test Failed: ${error.message}`, false);
+      }
+    });
+    
+    // Test WebSocket
+    document.getElementById('testWs').addEventListener('click', () => {
+      const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+      const host = window.location.host;
+      const wsUrl = `${protocol}//${host}/ws`;
+      
+      addResult(`Attempting WebSocket connection to ${wsUrl}...`, true);
+      
+      try {
+        const socket = new WebSocket(wsUrl);
+        
+        socket.onopen = () => {
+          addResult(`WebSocket connection established successfully`, true);
+          
+          // Send a test ping message
+          const message = JSON.stringify({
+            type: 'ping',
+            artworkId: 1,
+            data: { timestamp: new Date().toISOString() }
+          });
+          
+          socket.send(message);
+          addResult(`Sent test message: ${message}`, true);
+        };
+        
+        socket.onmessage = (event) => {
+          try {
+            const data = JSON.parse(event.data);
+            addJsonResult('Received WebSocket message', data, true);
+          } catch (e) {
+            addResult(`Received WebSocket message: ${event.data}`, true);
+          }
+        };
+        
+        socket.onerror = (error) => {
+          addResult(`WebSocket error: ${error.message || 'Unknown error'}`, false);
+        };
+        
+        socket.onclose = (event) => {
+          addResult(`WebSocket connection closed: Code ${event.code}, Reason: ${event.reason || 'No reason provided'}`, false);
+        };
+        
+        // Close the connection after 10 seconds
+        setTimeout(() => {
+          if (socket.readyState === WebSocket.OPEN) {
+            socket.close();
+            addResult('WebSocket connection closed after 10 seconds', true);
+          }
+        }, 10000);
+        
+      } catch (error) {
+        addResult(`Failed to create WebSocket: ${error.message}`, false);
+      }
+    });
+  </script>
+</body>
+</html>
